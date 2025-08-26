@@ -24,3 +24,6 @@ Core fetures in this repo:
 5. Inventory (quantity with price) management mysql db.
 6. Order management Mongo DB
 7. Use payment micro services with Flusk API and stripe.
+8. Destop application with electorn
+9. Support local sqlite db with Fastapi local server in desktop application.
+10. Use redux for state management
