@@ -1,83 +1,154 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+
+export default function CheckoutPage() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    zip: "",
+    phone: "",
+    cardNumber: "",
+    expiry: "",
+    cvv: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // Example order summary (could come from cart context)
+  const subtotal = 7998;
+  const shipping = 199;
+  const total = subtotal + shipping;
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
         
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        {/* Checkout Form */}
+        <div className="lg:col-span-2 bg-white rounded-2xl shadow p-6 space-y-8">
+          <h1 className="text-3xl font-bold text-gray-800">Checkout</h1>
+
+          {/* Shipping Info */}
+          <div>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Shipping Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Full Name"
+                className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Email"
+                className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="text"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="Phone Number"
+                className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="text"
+                name="address"
+                value={form.address}
+                onChange={handleChange}
+                placeholder="Address"
+                className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 md:col-span-2"
+              />
+              <input
+                type="text"
+                name="city"
+                value={form.city}
+                onChange={handleChange}
+                placeholder="City"
+                className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="text"
+                name="state"
+                value={form.state}
+                onChange={handleChange}
+                placeholder="State"
+                className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="text"
+                name="zip"
+                value={form.zip}
+                onChange={handleChange}
+                placeholder="Zip Code"
+                className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
+          {/* Payment Info */}
+          <div>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Payment Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="cardNumber"
+                value={form.cardNumber}
+                onChange={handleChange}
+                placeholder="Card Number"
+                className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 md:col-span-2"
+              />
+              <input
+                type="text"
+                name="expiry"
+                value={form.expiry}
+                onChange={handleChange}
+                placeholder="MM/YY"
+                className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="text"
+                name="cvv"
+                value={form.cvv}
+                onChange={handleChange}
+                placeholder="CVV"
+                className="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Order Summary */}
+        <div className="bg-white rounded-2xl shadow p-6 h-fit space-y-4">
+          <h2 className="text-2xl font-bold text-gray-800">Order Summary</h2>
+          <div className="flex justify-between text-gray-600">
+            <span>Subtotal</span>
+            <span>₹{subtotal}</span>
+          </div>
+          <div className="flex justify-between text-gray-600">
+            <span>Shipping</span>
+            <span>₹{shipping}</span>
+          </div>
+          <hr />
+          <div className="flex justify-between font-bold text-lg text-gray-800">
+            <span>Total</span>
+            <span>₹{total}</span>
+          </div>
+          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl shadow-md transition">
+            Place Order
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

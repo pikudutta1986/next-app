@@ -1,83 +1,111 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
-export default function Home() {
+export default function ProductDetailsPage() {
+  const [selectedImage, setSelectedImage] = useState("/product-1.jpg");
+
+  const images = [
+    "/product-1.jpg",
+    "/product-2.jpg",
+    "/product-3.jpg",
+    "/product-4.jpg",
+  ];
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
         
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+        {/* Product Images */}
+        <div className="space-y-4">
+          <div className="relative w-full h-[500px] rounded-2xl overflow-hidden shadow-lg">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src={selectedImage}
+              alt="Product"
+              fill
+              className="object-cover transition-transform duration-300 hover:scale-105"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+          <div className="grid grid-cols-4 gap-4">
+            {images.map((img, i) => (
+              <div
+                key={i}
+                className={`relative w-full h-28 rounded-xl overflow-hidden cursor-pointer border-2 ${
+                  selectedImage === img ? "border-blue-600" : "border-gray-200"
+                }`}
+                onClick={() => setSelectedImage(img)}
+              >
+                <Image
+                  src={img}
+                  alt="Thumbnail"
+                  fill
+                  className="object-cover hover:opacity-80"
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Product Info */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6">
+          <h1 className="text-3xl font-bold text-gray-800">
+            Premium Wireless Headphones
+          </h1>
+
+          {/* Ratings */}
+          <div className="flex items-center space-x-1">
+            {[...Array(5)].map((_, i) => (
+              <svg
+                key={i}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="gold"
+                viewBox="0 0 24 24"
+                stroke="gold"
+                className="w-5 h-5"
+              >
+                <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.841 1.48 8.292L12 18.896l-7.416 4.543 1.48-8.292L0 9.306l8.332-1.151z" />
+              </svg>
+            ))}
+            <span className="text-gray-500 text-sm ml-2">(124 reviews)</span>
+          </div>
+
+          <p className="text-gray-600 leading-relaxed">
+            Experience superior sound quality with our premium wireless
+            headphones. Noise-canceling, lightweight, and comfortable for
+            all-day wear.
+          </p>
+
+          {/* Price */}
+          <div>
+            <span className="text-4xl font-bold text-blue-600">₹4,999</span>
+            <span className="ml-3 text-gray-400 line-through">₹6,499</span>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex space-x-4">
+            <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg rounded-2xl shadow-md transition">
+              🛒 Add to Cart
+            </button>
+            <button className="flex items-center gap-2 border border-gray-300 hover:border-blue-600 px-6 py-3 text-lg rounded-2xl transition">
+              ❤️ Wishlist
+            </button>
+          </div>
+
+          {/* Specifications */}
+          <div className="pt-6 border-t">
+            <h2 className="text-xl font-semibold text-gray-700 mb-3">
+              Specifications
+            </h2>
+            <ul className="grid grid-cols-2 gap-y-2 text-gray-600">
+              <li>Bluetooth: 5.2</li>
+              <li>Battery Life: 30 hrs</li>
+              <li>Weight: 220g</li>
+              <li>Warranty: 1 Year</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
