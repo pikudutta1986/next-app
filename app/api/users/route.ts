@@ -1,21 +1,38 @@
-// app/api/users/route.ts
+// THIS FILE HANDLES ALL THE /api/users ENPOINTS. EACH METHOD REPRESENT ONE FUNCTION
+// HERE MYSQL DB IS USED TO STORE AND RETRIVE USERS
 import {NextResponse} from "next/server";
-import {connectDB} from "../../services/mongodb";
-import User from "../../models/User";
+import {getMySQLPool} from "../../lib/mysqldb";
 
 // GET all users
+// Endpoint: /api/users with GET METHOD
 export async function GET()
 {
-    await connectDB();
-    const users = await User.find();
-    return NextResponse.json(users);
+    try
+    {
+        const pool = getMySQLPool();
+        const [rows] = await pool.query("SELECT * FROM users");
+        return NextResponse.json(rows);
+    } catch (err)
+    {
+        return NextResponse.json({error: "Failed to fetch users"}, {status: 500});
+    }
 }
 
-// POST new user
+// CREATE a new user
+// Endpoint: /api/users with POST METHOD
 export async function POST(req: Request)
 {
-    await connectDB();
-    const body = await req.json();
-    const user = await User.create(body);
-    return NextResponse.json(user, {status: 201});
+    try
+    {
+        const {name, email} = await req.json();
+        const pool = getMySQLPool();
+        const [result] = await pool.query(
+            "INSERT INTO users (name, email) VALUES (?, ?)",
+            [name, email]
+        );
+        return NextResponse.json({id: (result as any).insertId, name, email}, {status: 201});
+    } catch (err)
+    {
+        return NextResponse.json({error: "Failed to create user"}, {status: 500});
+    }
 }
