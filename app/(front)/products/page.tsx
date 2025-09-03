@@ -1,7 +1,6 @@
-// app/products/page.tsx
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 type Product = {
   id: number;
@@ -12,49 +11,70 @@ type Product = {
   color: string;
 };
 
-const allProducts: Product[] = [
-  { id: 1, name: "iPhone 15 Pro", price: 1200, image: "/images/iphone.jpg", brand: "Apple", color: "Silver" },
-  { id: 2, name: "Samsung Galaxy S23", price: 999, image: "/images/galaxy.jpg", brand: "Samsung", color: "Black" },
-  { id: 3, name: "MacBook Air M2", price: 1500, image: "/images/macbook.jpg", brand: "Apple", color: "Gray" },
-  { id: 4, name: "Dell XPS 13", price: 1300, image: "/images/dell.jpg", brand: "Dell", color: "Silver" },
-  { id: 5, name: "Sony WH-1000XM5", price: 400, image: "/images/headphones.jpg", brand: "Sony", color: "Black" },
-];
-
-export default async function ProductsPage() {
+export default function ProductsPage()
+{
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<number>(2000);
 
-  const brands = ["Apple", "Samsung", "Dell", "Sony"];
-  const colors = ["Black", "Silver", "Gray"];
+  // Fetch products from API
+  useEffect(() =>
+  {
+    const fetchProducts = async () =>
+    {
+      try
+      {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        setProducts(data);
+      } catch (err)
+      {
+        console.error("Failed to fetch products:", err);
+      } finally
+      {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-  const res = await fetch("http://localhost:3000/api/users", {
-    cache: "no-store", // ensure fresh data
-  });
-  const users = await res.json();
+  // Unique brand and color filters
+  const brands = Array.from(new Set(products.map((p) => p.brand)));
+  const colors = Array.from(new Set(products.map((p) => p.color)));
 
-  const toggleBrand = (brand: string) => {
+  const toggleBrand = (brand: string) =>
+  {
     setSelectedBrands((prev) =>
       prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
     );
   };
 
-  const toggleColor = (color: string) => {
+  const toggleColor = (color: string) =>
+  {
     setSelectedColors((prev) =>
       prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
     );
   };
 
-  const filteredProducts = allProducts.filter((p) => {
+  // Apply filters
+  const filteredProducts = products.filter((p) =>
+  {
     const brandMatch = selectedBrands.length ? selectedBrands.includes(p.brand) : true;
     const colorMatch = selectedColors.length ? selectedColors.includes(p.color) : true;
     const priceMatch = p.price <= priceRange;
     return brandMatch && colorMatch && priceMatch;
   });
 
+  if (loading)
+  {
+    return <p className="p-8 text-gray-600">Loading products...</p>;
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
+      {/* Sidebar Filters */}
       <aside className="hidden w-72 border-r bg-white p-6 shadow-lg md:block">
         <h2 className="mb-6 text-xl font-bold text-gray-800">Filters</h2>
 
@@ -128,10 +148,10 @@ export default async function ProductsPage() {
                   className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="p-4">
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {product.name}
-                  </h2>
-                  <p className="text-sm text-gray-500">{product.brand} • {product.color}</p>
+                  <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
+                  <p className="text-sm text-gray-500">
+                    {product.brand} • {product.color}
+                  </p>
                   <p className="mt-2 text-xl font-bold text-indigo-600">${product.price}</p>
                   <button className="mt-4 w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700">
                     Add to Cart

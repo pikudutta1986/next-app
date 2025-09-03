@@ -2,6 +2,7 @@
 // HERE MYSQL DB IS USED TO STORE AND RETRIVE USERS
 import {NextResponse} from "next/server";
 import {getMySQLPool} from "../../lib/mysqldb";
+import bcrypt from "bcryptjs";
 
 // GET all users
 // Endpoint: /api/users with GET METHOD
@@ -24,11 +25,13 @@ export async function POST(req: Request)
 {
     try
     {
-        const {name, email} = await req.json();
+        const {name, email, password} = await req.json();
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const pool = getMySQLPool();
         const [result] = await pool.query(
-            "INSERT INTO users (name, email) VALUES (?, ?)",
-            [name, email]
+            "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
+            [name, email, hashedPassword, 'CUSTOMER']
         );
         return NextResponse.json({id: (result as any).insertId, name, email}, {status: 201});
     } catch (err)
